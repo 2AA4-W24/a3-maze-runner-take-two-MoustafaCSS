@@ -22,9 +22,6 @@ public class TremauxSolver implements MazeSolver {
         return tracePath();
     }
 
-    /**
-     * Mark entrances in marks 2D array.
-     */
     private void markEntrances() {
         Position currentPos = maze.getStart();
         Position previousPos = null;
@@ -65,13 +62,7 @@ public class TremauxSolver implements MazeSolver {
         marks[maze.getEnd().y()][maze.getEnd().x()] = 1;
     }
 
-    /**
-     * Get the number of neighbors that have at least one mark.
-     *
-     * @param neighbors Neighbors to check
-     * @return Number of marked neighbors
-     */
-    private int nbMarkedNeighbors(List<Position> neighbors) {
+    private int nbMarkedNeighbors(List<Position> neighbors) {       //et the number of neighbors that have at least one mar 
         int nbMarkedNeighbors = 0;
         for (Position n : neighbors) {
             if (marks[n.y()][n.x()] != 0) {
@@ -81,25 +72,12 @@ public class TremauxSolver implements MazeSolver {
         return nbMarkedNeighbors;
     }
 
-    /**
-     * Chose a viable neighbor by sorting the neighbors by the number of
-     * marks and picking the first.
-     *
-     * @param neighbors Neighbors to chose from
-     * @return Chosen neighbor
-     */
-    private Position pickNeighbor(List<Position> neighbors) {
+    private Position pickNeighbor(List<Position> neighbors) {       //Chose a viable neighbor by sorting the neighbors by the number of marks and picking the first
         neighbors.sort(Comparator.comparingInt(pos -> marks[pos.y()][pos.x()]));
         return neighbors.getFirst();
     }
 
-    /**
-     * Get list of possible valid neighbors of position.
-     *
-     * @param pos Position to get neighbors of
-     * @return List of neighbors
-     */
-    private List<Position> getMazeNeighbors(Position pos) {
+    private List<Position> getMazeNeighbors(Position pos) {     //Get list of possible valid neighbors of position
         List<Position> neighbors = new ArrayList<>();
 
         Position left = pos.add(new Position(-1, 0));
@@ -117,12 +95,7 @@ public class TremauxSolver implements MazeSolver {
         return neighbors;
     }
 
-    /**
-     * Create path from start to end using marks.
-     *
-     * @return Path from start to end
-     */
-    private Path tracePath() {
+    private Path tracePath() {      //Create path from start to end using marks.
         Path path = new Path();
 
         Direction dir = Direction.RIGHT;
@@ -169,15 +142,7 @@ public class TremauxSolver implements MazeSolver {
         return path;
     }
 
-    /**
-     * Check if position is in the maze bounds.
-     *
-     * @param position Position to validate
-     * @param sizeX    Maze horizontal (X) size
-     * @param sizeY    Maze vertical (Y) size
-     * @return If position is in bounds
-     */
-    private boolean isInBounds(Position position, int sizeX, int sizeY) {
+    private boolean isInBounds(Position position, int sizeX, int sizeY) {   //check if in maze bounds
         return position.x() >= 0 && position.x() < sizeX && position.y() >= 0 && position.y() < sizeY;
     }
 }

@@ -16,12 +16,6 @@ public class Maze {
     private final Position start;
     private final Position end;
 
-    /**
-     * Initialize a Maze from a file path.
-     *
-     * @param filePath File path of the maze file
-     * @throws Exception If maze cannot be read, or maze has no start or end
-     */
     public Maze(String filePath) throws Exception {
         logger.debug("Reading the maze from file " + filePath);
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -41,12 +35,6 @@ public class Maze {
         end = findEnd();
     }
 
-    /**
-     * Find start position of the maze.
-     *
-     * @return The start position
-     * @throws Exception If no valid start position exists
-     */
     private Position findStart() throws Exception {
         for (int i = 0; i < maze.size(); i++) {
             Position pos = new Position(0, i);
@@ -57,12 +45,6 @@ public class Maze {
         throw new Exception("Invalid maze (no start position available)");
     }
 
-    /**
-     * Find start end of the maze.
-     *
-     * @return The end position
-     * @throws Exception If no valid end position exists
-     */
     private Position findEnd() throws Exception {
         for (int i = 0; i < maze.size(); i++) {
             Position pos = new Position(maze.getFirst().size() - 1, i);
@@ -73,72 +55,31 @@ public class Maze {
         throw new Exception("Invalid maze (no end position available)");
     }
 
-    /**
-     * Check if position of Maze is a wall.
-     *
-     * @param pos The position to check
-     * @return If position is a wall
-     */
     public Boolean isWall(Position pos) {
         return maze.get(pos.y()).get(pos.x());
     }
 
-    /**
-     * Get start position.
-     *
-     * @return Start position
-     */
     public Position getStart() {
         return start;
     }
 
-    /**
-     * Get end position.
-     *
-     * @return End position
-     */
     public Position getEnd() {
         return end;
     }
 
-    /**
-     * Get horizontal (X) size of Maze.
-     *
-     * @return Horizontal size
-     */
-    public int getSizeX() {
+    public int getSizeX() {     //horizontal size
         return this.maze.getFirst().size();
     }
 
-    /**
-     * Get vertical (Y) size of Maze.
-     *
-     * @return Vertical size
-     */
-    public int getSizeY() {
+    public int getSizeY() {     //vertical size
         return this.maze.size();
     }
 
-    /**
-     * Check if path is valid for Maze.
-     *
-     * @param path The path to valid
-     * @return If path is valid
-     */
-    public Boolean validatePath(Path path) {
+    public Boolean validatePath(Path path) {        //return if path is valid
         return validatePathDir(path, getStart(), Direction.RIGHT, getEnd()) || validatePathDir(path, getEnd(), Direction.LEFT, getStart());
     }
 
-    /**
-     * Check if path is valid from starting to end position.
-     *
-     * @param path Path
-     * @param startPos Starting position
-     * @param startDir Starting direction
-     * @param endPos Ending position
-     * @return If path is valid
-     */
-    private Boolean validatePathDir(Path path, Position startPos, Direction startDir, Position endPos) {
+    private Boolean validatePathDir(Path path, Position startPos, Direction startDir, Position endPos) {        //check if path is valid
         Position pos = startPos;
         Direction dir = startDir;
         for (char c : path.getPathSteps()) {

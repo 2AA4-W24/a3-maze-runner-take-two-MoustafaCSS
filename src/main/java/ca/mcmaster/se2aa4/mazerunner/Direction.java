@@ -6,11 +6,6 @@ public enum Direction {
     LEFT,
     RIGHT;
 
-    /**
-     * Get the direction to the right of the current one.
-     *
-     * @return The direction to the right.
-     */
     public Direction turnRight() {
         switch (this) {
             case UP -> {
@@ -29,11 +24,6 @@ public enum Direction {
         throw new IllegalStateException("Unexpected value: " + this);
     }
 
-    /**
-     * Get the direction to the left of the current one.
-     *
-     * @return The direction to the left.
-     */
     public Direction turnLeft() {
         switch (this) {
             case UP -> {

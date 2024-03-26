@@ -6,18 +6,10 @@ import java.util.List;
 public class Path {
     private final List<Character> path = new ArrayList<>();
 
-    /**
-     * Initialize an empty Path.
-     */
-    public Path() {
+    public Path() {     //initialize empty path  
     }
 
-    /**
-     * Initialize path from a Path String.
-     *
-     * @param pathStr The Path String
-     */
-    public Path(String pathStr) {
+    public Path(String pathStr) {       //initialize path from path string
         String expanded = expandFactorizedStringPath(pathStr);
         for (Character c : expanded.toCharArray()) {
             if (c != ' ') {
@@ -29,12 +21,6 @@ public class Path {
         }
     }
 
-    /**
-     * Expand a factorized string path into a canonical one.
-     *
-     * @param path String path
-     * @return Expanded string path
-     */
     public String expandFactorizedStringPath(String path) {
         StringBuilder expanded = new StringBuilder();
 
@@ -57,29 +43,14 @@ public class Path {
         return expanded.toString();
     }
 
-    /**
-     * Get steps of Path.
-     *
-     * @return Chars of Path
-     */
     public List<Character> getPathSteps() {
         return new ArrayList<>(this.path);
     }
 
-    /**
-     * Adds a step to the path.
-     *
-     * @param step The step that needs to be added.
-     */
     public void addStep(Character step) {
         path.add(step);
     }
 
-    /**
-     * Generates the canonical form of the maze path.
-     *
-     * @return A string of the canonical form of a path.
-     */
     public String getCanonicalForm() {
         StringBuilder sb = new StringBuilder();
 
@@ -95,11 +66,6 @@ public class Path {
         return sb.toString();
     }
 
-    /**
-     * Generates the factorized form of the maze path.
-     *
-     * @return A string of the factorized form of a path.
-     */
     public String getFactorizedForm() {
         StringBuilder sb = new StringBuilder();
 

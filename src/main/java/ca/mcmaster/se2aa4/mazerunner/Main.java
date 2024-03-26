@@ -40,14 +40,6 @@ public class Main {
         logger.info("End of MazeRunner");
     }
 
-    /**
-     * Solve provided maze with specified method.
-     *
-     * @param method Method to solve maze with
-     * @param maze Maze to solve
-     * @return Maze solution path
-     * @throws Exception If provided method does not exist
-     */
     private static Path solveMaze(String method, Maze maze) throws Exception {
         MazeSolver solver = null;
         switch (method) {
@@ -68,12 +60,7 @@ public class Main {
         return solver.solve(maze);
     }
 
-    /**
-     * Get options for CLI parser.
-     *
-     * @return CLI parser options
-     */
-    private static Options getParserOptions() {
+    private static Options getParserOptions() { //get options for CLI parser    
         Options options = new Options();
 
         Option fileOption = new Option("i", true, "File that contains maze");
