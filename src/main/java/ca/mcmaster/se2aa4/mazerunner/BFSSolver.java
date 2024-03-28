@@ -29,7 +29,7 @@ public class BFSSolver implements MazeSolver {
         return null; 
     }
 
-    private List<Position> getNeighbors(Position position, Maze maze) {
+    private List<Position> getNeighbors(Position position, Maze maze) { //
         List<Position> neighbors = new ArrayList<>();
         return neighbors;
     }
