@@ -99,7 +99,19 @@ public class Maze {
             }
             logger.debug("Current Position: " + pos);
         }
+        
 
         return pos.equals(endPos);
     }
+
+    public boolean isValidMove(Position position) {
+        // Check if the position is within maze bounds
+        if (position.x() < 0 || position.x() >= getSizeX() ||
+            position.y() < 0 || position.y() >= getSizeY()) {
+            return false; // Out of bounds
+        }
+        // Check if the position is not a wall
+        return !isWall(position);
+    }
+
 }
