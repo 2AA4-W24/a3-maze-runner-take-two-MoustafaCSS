@@ -3,35 +3,44 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*; //ask prof about using * because it is not used in other classes
+import java.util.*;
 
 public class BFSSolver implements MazeSolver {
-    
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(BFSSolver.class);
+
+    private static class State {
+        Position position;
+        Direction direction;
+        Path path;
+
+        State(Position position, Direction direction, Path path) {
+            this.position = position;
+            this.direction = direction;
+            this.path = path;
+        }
+    }
 
     @Override
     public Path solve(Maze maze) {
-        Path path = new Path();
-        Queue<Position> queue = new LinkedList<>();
-        queue.add(maze.getStart());
+        Queue<State> queue = new LinkedList<>();
+        Set<Position> visited = new HashSet<>();
 
-        Map<Position, Position> predecessors = new HashMap<>();
-        boolean[][] visited = new boolean[maze.getSizeY()][maze.getSizeX()];
-        visited[maze.getStart().y()][maze.getStart().x()] = true;
+        queue.add(new State(maze.getStart(), Direction.RIGHT, new Path())); //direction always right? ask prof
+        visited.add(maze.getStart());
 
         while (!queue.isEmpty()) {
-            Position current = queue.poll();
-            /////////
+            State currentState = queue.poll();
+            Position currentPosition = currentState.position;
+            Direction currentDirection = currentState.direction;
+            Path currentPath = currentState.path;
+
+            if (currentPosition.equals(maze.getEnd())) {
+                return currentPath;
+            }
 
         }
 
-        logger.error("No path found"); //if you reach here, no path has been found to solve the maze
-        return null; 
+        logger.error("No path found from start to end in the maze.");
+        return new Path(); // Return an empty path if no path is found
     }
-
-    private List<Position> getNeighbors(Position position, Maze maze) { //
-        List<Position> neighbors = new ArrayList<>();
-        return neighbors;
-    }
-
 }
