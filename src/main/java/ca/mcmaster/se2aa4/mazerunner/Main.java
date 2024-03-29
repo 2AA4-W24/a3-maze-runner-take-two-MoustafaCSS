@@ -11,12 +11,18 @@ public class Main {
     public static void main(String[] args) {
         logger.info("** Starting Maze Runner");
         CommandLineParser parser = new DefaultParser();
-
+        
         CommandLine cmd = null;
-        try {
+        try {       //tech debt too clumpy maybe fix
             cmd = parser.parse(getParserOptions(), args);
-            String filePath = cmd.getOptionValue('i');
-            Maze maze = new Maze(filePath);
+            String filePath = cmd.getOptionValue("i");
+            String baselineMethod = cmd.getOptionValue("baseline");
+            String method = cmd.getOptionValue("method", "righthand"); //2x
+
+            long startTime = System.currentTimeMillis();
+            Maze maze = new Maze(filePath);     
+            long mazeLoadingTime = System.currentTimeMillis() - startTime;
+            logger.info(String.format("Maze loading time: %.2f ms", (double) mazeLoadingTime));
 
             if (cmd.getOptionValue("p") != null) {
                 logger.info("Validating path");
@@ -27,10 +33,19 @@ public class Main {
                     System.out.println("incorrect path");
                 }
             } else {
-                String method = cmd.getOptionValue("method", "righthand");
+                method = cmd.getOptionValue("method", "righthand"); //2x
                 Path path = solveMaze(method, maze);
                 System.out.println(path.getFactorizedForm());
             }
+            Path methodPath = benchmarkMazeSolving(method, maze);
+
+            if (baselineMethod != null) {
+                Path baselinePath = benchmarkMazeSolving(baselineMethod, maze);
+                double speedup = calculateSpeedup(baselinePath, methodPath);
+                System.out.printf("Speedup: %.2f\n", speedup);
+            }
+        } catch (ParseException e) {
+            logger.error("Parsing command line failed. Reason: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("MazeSolver failed.  Reason: " + e.getMessage());
             logger.error("MazeSolver failed.  Reason: " + e.getMessage());
@@ -40,39 +55,45 @@ public class Main {
         logger.info("End of MazeRunner");
     }
 
-    private static Path solveMaze(String method, Maze maze) throws Exception {
-        MazeSolver solver = null;
-        switch (method) {
-            case "righthand" -> {
-                logger.debug("RightHand algorithm chosen.");
-                solver = new RightHandSolver();
-            }
-            case "tremaux" -> {
-                logger.debug("Tremaux algorithm chosen.");
-                solver = new TremauxSolver();
-            }
-            case "BFS" -> {
-                logger.debug("BFS algorithm chosen.");
-                solver = new BFSSolver();
-            }
-            default -> {
-                throw new Exception("Maze solving method '" + method + "' not supported.");
-            }
-        }
+    private static Path benchmarkMazeSolving(String method, Maze maze) throws Exception {
+        long startTime = System.currentTimeMillis();
+        Path path = solveMaze(method, maze);
+        long solvingTime = System.currentTimeMillis() - startTime;
+        logger.info(String.format("Time using %s: %.2f ms", method, (double) solvingTime));
+        return path;
+    }
 
-        logger.info("Computing path");
+    private static double calculateSpeedup(Path baselinePath, Path methodPath) {
+        int baselineInstructions = baselinePath.getPathSteps().size();
+        int methodInstructions = methodPath.getPathSteps().size();
+        return (double) baselineInstructions / methodInstructions;
+    }
+
+    private static Path solveMaze(String method, Maze maze) throws Exception {
+        MazeSolver solver;
+        switch (method) {
+            case "righthand":
+                solver = new RightHandSolver();
+                break;
+            case "tremaux":
+                solver = new TremauxSolver();
+                break;
+            case "BFS":
+                solver = new BFSSolver();
+                break;
+            default:
+                throw new Exception("Maze solving method '" + method + "' not supported.");
+        }
         return solver.solve(maze);
     }
 
-    private static Options getParserOptions() { //get options for CLI parser    
+    private static Options getParserOptions() {
         Options options = new Options();
 
-        Option fileOption = new Option("i", true, "File that contains maze");
-        fileOption.setRequired(true);
-        options.addOption(fileOption);
-
+        options.addOption(new Option("i", true, "File that contains maze"));
         options.addOption(new Option("p", true, "Path to be verified in maze"));
         options.addOption(new Option("method", true, "Specify which path computation algorithm will be used"));
+        options.addOption(new Option("baseline", true, "Baseline maze solving method for comparison"));
 
         return options;
     }
