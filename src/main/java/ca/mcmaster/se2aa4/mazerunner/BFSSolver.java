@@ -38,9 +38,36 @@ public class BFSSolver implements MazeSolver {
                 return currentPath;
             }
 
+            Position forwardPos = currentPosition.move(currentDirection);   //F
+            if (!visited.contains(forwardPos) && maze.isValidMove(forwardPos)) {
+                visited.add(forwardPos);
+                Path newPath = new Path(currentPath.getFactorizedForm());
+                newPath.addStep('F');
+                queue.add(new State(forwardPos, currentDirection, newPath));
+            }
+
+            Direction rightDirection = currentDirection.turnRight();    //RF
+            Position rightPos = currentPosition.move(rightDirection);
+            if (!visited.contains(rightPos) && maze.isValidMove(rightPos)) {
+                visited.add(rightPos);
+                Path newPath = new Path(currentPath.getFactorizedForm());
+                newPath.addStep('R'); 
+                newPath.addStep('F'); 
+                queue.add(new State(rightPos, rightDirection, newPath));
+            }
+
+            Direction leftDirection = currentDirection.turnLeft();  //LF
+            Position leftPos = currentPosition.move(leftDirection);
+            if (!visited.contains(leftPos) && maze.isValidMove(leftPos)) {
+                visited.add(leftPos);
+                Path newPath = new Path(currentPath.getFactorizedForm());
+                newPath.addStep('L'); 
+                newPath.addStep('F'); 
+                queue.add(new State(leftPos, leftDirection, newPath));
+            }
         }
 
-        logger.error("No path found from start to end in the maze.");
-        return new Path(); // Return an empty path if no path is found
+        logger.error("No path found");
+        return new Path(); 
     }
 }
