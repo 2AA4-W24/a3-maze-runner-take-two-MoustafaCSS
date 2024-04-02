@@ -59,14 +59,14 @@ public class BFSSolver implements MazeSolver {
             }
 
             Direction leftDirection = currentDirection.turnLeft();  //LF
-            Position leftPos = currentPosition.move(leftDirection);
+            Position leftPosition = currentPosition.move(leftDirection);
             
-            if (!visited.contains(leftPos) && maze.isValidMove(leftPos)) {
-                visited.add(leftPos);
+            if (!visited.contains(leftPosition) && maze.isValidMove(leftPosition)) {
+                visited.add(leftPosition);
                 Path newPath = new Path(currentPath.getFactorizedForm());
                 newPath.addStep('L'); 
                 newPath.addStep('F'); 
-                queue.add(new State(leftPos, leftDirection, newPath));
+                queue.add(new State(leftPosition, leftDirection, newPath));
             }
         }
 
