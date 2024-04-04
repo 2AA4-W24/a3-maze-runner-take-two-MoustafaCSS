@@ -112,4 +112,30 @@ public class Maze {
         return !isWall(position);
     }
 
+    public List<Position> getNeighborPosition(Position position) {
+        List<Position> neighbors = new ArrayList<>();
+
+        Position up = new Position(position.x(), position.y() - 1);
+        if (isValidMove(up) && !isWall(up)) {
+            neighbors.add(up);
+        }
+
+        Position down = new Position(position.x(), position.y() + 1);
+        if (isValidMove(down) && !isWall(down)) {
+            neighbors.add(down);
+        }
+
+        Position left = new Position(position.x() - 1, position.y());
+        if (isValidMove(left) && !isWall(left)) {
+            neighbors.add(left);
+        }
+
+        Position right = new Position(position.x() + 1, position.y());
+        if (isValidMove(right) && !isWall(right)) {
+            neighbors.add(right);
+        }
+
+        return neighbors;
+    }
+
 }
