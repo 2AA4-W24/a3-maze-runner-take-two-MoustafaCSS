@@ -32,12 +32,19 @@ public class Main {
                 System.out.println(path.getFactorizedForm());
 
                 if (cmd.hasOption("baseline")) {
-                    System.out.println("time to load the maze from the file: " + maze.getMazeLoadingTime() + " milliseconds" );
-                    String baseline = cmd.getOptionValue("baseline", "tremaux");
-                    Path baselinePath = solveMaze(baseline, maze);
-                    SpeedUp suc = new SpeedUp();
-                    String speedUp = suc.calculatepeedUp(path, baselinePath);
-                    System.out.println("the " + method + " algorithm is " + speedUp + " times faster than " + baseline);
+                    String baseline = cmd.getOptionValue("baseline");
+                    
+                    System.out.println("Time to load in the maze from the file: " + maze.getMazeLoadingTime() + " milliseconds" );
+                    
+                    MazeSolvingResults baselineResult = benchmarkMazeSolving(baseline, maze);
+                    MazeSolvingResults methodResult = benchmarkMazeSolving(method, maze); // Ensure method benchmarking happens here too
+                
+                    System.out.println("Time to solve the maze using the " + method + " method: " + methodResult.getExecutionTime() + " ms");
+                    System.out.println("Time to solve the maze using the " + baseline + " method: " + baselineResult.getExecutionTime() + " ms");
+                
+                    SpeedUp speedUpCalculator = new SpeedUp();
+                    String speedUp = speedUpCalculator.calculateSpeedUp(methodResult.getPath(), baselineResult.getPath());
+                    System.out.println("The " + method + " algorithm is " + speedUp + " times faster than " + baseline);
                 }
             }
         } catch (Exception e) {
@@ -47,6 +54,13 @@ public class Main {
         }
 
         logger.info("End of MazeRunner");
+    }
+
+    private static MazeSolvingResults benchmarkMazeSolving(String method, Maze maze) throws Exception {
+        long startTime = System.currentTimeMillis();
+        Path path = solveMaze(method, maze);
+        long solvingTime = System.currentTimeMillis() - startTime;
+        return new MazeSolvingResults(path, solvingTime);
     }
 
     private static Path solveMaze(String method, Maze maze) throws Exception {
