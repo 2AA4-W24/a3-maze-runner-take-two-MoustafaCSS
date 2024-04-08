@@ -15,8 +15,10 @@ public class Maze {
 
     private final Position start;
     private final Position end;
+    private long mazeLoadingTime;
 
     public Maze(String filePath) throws Exception {
+        long startTime = System.currentTimeMillis();
         logger.debug("Reading the maze from file " + filePath);
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         String line;
@@ -33,6 +35,7 @@ public class Maze {
         }
         start = findStart();
         end = findEnd();
+        mazeLoadingTime = System.currentTimeMillis() - startTime;
     }
 
     private Position findStart() throws Exception {
@@ -100,11 +103,10 @@ public class Maze {
             logger.debug("Current Position: " + pos);
         }
         
-
         return pos.equals(endPos);
     }
 
-    public boolean isValidMove(Position position) { //ask prof
+    public boolean isValidMove(Position position) { 
         if (position.x() < 0 || position.x() >= getSizeX() ||
             position.y() < 0 || position.y() >= getSizeY()) {
             return false; // Out of bounds
@@ -138,4 +140,8 @@ public class Maze {
         return neighbors;
     }
 
+    public String getMazeLoadingTime() {
+        double mazeLoadingTimeDouble = mazeLoadingTime; 
+        return String.format("%.2f", mazeLoadingTimeDouble);
+    }
 }
