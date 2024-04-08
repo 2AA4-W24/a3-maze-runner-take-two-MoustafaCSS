@@ -47,6 +47,10 @@ public class Path {
         return new ArrayList<>(this.path);
     }
 
+    public int getPathSize (Path path) {
+        return this.path.size();
+    }
+
     public void addStep(Character step) {
         path.add(step);
     }
