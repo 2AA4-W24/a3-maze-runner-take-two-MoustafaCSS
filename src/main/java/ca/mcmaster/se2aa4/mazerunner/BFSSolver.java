@@ -1,76 +1,91 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.*;
 
-public class BFSSolver implements MazeSolver {
-    private static final Logger logger = LogManager.getLogger();
-
-    private static class State {
-        Position position;
-        Direction direction;
-        Path path;
-
-        State(Position position, Direction direction, Path path) {
-            this.position = position;
-            this.direction = direction;
-            this.path = path;
-        }
-    }
+public class BFSSolver implements GraphTraversal {
 
     @Override
-    public Path solve(Maze maze) {
-        Queue<State> queue = new LinkedList<>(); // ask prof to make private or no
-        Set<Position> visited = new HashSet<>();
-
-        queue.add(new State(maze.getStart(), Direction.RIGHT, new Path())); //direction always right? ask prof
-        visited.add(maze.getStart());
+    public Path traverse(Graph graph, Node startNode, Node endNode) {
+    
+        Queue<Node> queue = new LinkedList<>();
+        Map<Node, Node> cameFrom = new HashMap<>();
+        queue.add(startNode);
+        cameFrom.put(startNode, null);
 
         while (!queue.isEmpty()) {
-            State currentState = queue.poll(); 
-            Position currentPosition = currentState.position;
-            Direction currentDirection = currentState.direction;
-            Path currentPath = currentState.path;
-
-            if (currentPosition.equals(maze.getEnd())) {
-                return currentPath;
+            Node currentNode = queue.poll();
+            if (currentNode.equals(endNode)) {
+                return reconstructPath(cameFrom, startNode, endNode);
             }
 
-            Position forwardPosition = currentPosition.move(currentDirection);   //F
-
-            if (!visited.contains(forwardPosition) && maze.isValidMove(forwardPosition)) { //check if isValid is fine
-                visited.add(forwardPosition);
-                Path newPath = new Path(currentPath.getFactorizedForm());
-                newPath.addStep('F');
-                queue.add(new State(forwardPosition, currentDirection, newPath));
-            }
-
-            Direction rightDirection = currentDirection.turnRight();    //RF
-            Position rightPosition = currentPosition.move(rightDirection);
-
-            if (!visited.contains(rightPosition) && maze.isValidMove(rightPosition)) {
-                visited.add(rightPosition);
-                Path newPath = new Path(currentPath.getFactorizedForm());
-                newPath.addStep('R'); 
-                newPath.addStep('F'); 
-                queue.add(new State(rightPosition, rightDirection, newPath));
-            }
-
-            Direction leftDirection = currentDirection.turnLeft();  //LF
-            Position leftPosition = currentPosition.move(leftDirection);
-            
-            if (!visited.contains(leftPosition) && maze.isValidMove(leftPosition)) {
-                visited.add(leftPosition);
-                Path newPath = new Path(currentPath.getFactorizedForm());
-                newPath.addStep('L'); 
-                newPath.addStep('F'); 
-                queue.add(new State(leftPosition, leftDirection, newPath));
+            for (Node neighbor : graph.getNeighbors(currentNode)) {
+                if (!cameFrom.containsKey(neighbor)) {
+                    queue.add(neighbor);
+                    cameFrom.put(neighbor, currentNode);
+                }
             }
         }
 
-        logger.error("No path found");
-        return new Path(); //empty path
+        return new Path(); 
     }
+
+    private Path reconstructPath(Map<Node, Node> cameFrom, Node start, Node end) {
+        LinkedList<Position> pathPositions = new LinkedList<>();
+        for (Node at = end; at != null; at = cameFrom.get(at)) {
+            pathPositions.addFirst(at.getPosition());
+        }
+
+        return convertToPath(pathPositions);
+    }
+
+    private Path convertToPath(LinkedList<Position> positions) {
+        Path path = new Path();
+
+        Direction currentDirection = Direction.RIGHT; //initial direction right?
+        Position previous = positions.poll(); 
+    
+        for (Position current : positions) {
+            Direction requiredDirection = getRequiredDirection(previous, current);
+    
+            while (currentDirection != requiredDirection) {
+                int turnsRight = turnsRequired(currentDirection, requiredDirection, true);
+                int turnsLeft = turnsRequired(currentDirection, requiredDirection, false);
+    
+                if (turnsRight <= turnsLeft) {
+                    path.addStep('R');
+                    currentDirection = currentDirection.turnRight();
+                } else {
+                    path.addStep('L');
+                    currentDirection = currentDirection.turnLeft();
+                }
+            }
+            path.addStep('F');
+            previous = current;
+        }
+    
+        return path;
+    }
+    
+    private int turnsRequired(Direction currentDirection, Direction targetDirection, boolean calculateRightTurns) {
+        int turns = 0;
+        Direction current = currentDirection;
+        while (current != targetDirection) {
+            if (calculateRightTurns) {
+                current = current.turnRight();
+            } else {
+                current = current.turnLeft();
+            }
+            turns++;
+        }
+        return turns;
+    }
+    
+    private Direction getRequiredDirection(Position from, Position to) {
+        if (from.x() < to.x()) return Direction.RIGHT;
+        if (from.x() > to.x()) return Direction.LEFT;
+        if (from.y() < to.y()) return Direction.DOWN; 
+        if (from.y() > to.y()) return Direction.UP;
+        throw new IllegalStateException("cannot determine direction from " + from + " to " + to);
+    }
+    
 }
