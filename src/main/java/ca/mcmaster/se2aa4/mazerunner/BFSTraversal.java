@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.util.*;
 
-public class BFSSolver implements GraphTraversal {
+public class BFSTraversal implements GraphTraversal {
 
     @Override
     public Path traverse(Graph graph, Node startNode, Node endNode) {

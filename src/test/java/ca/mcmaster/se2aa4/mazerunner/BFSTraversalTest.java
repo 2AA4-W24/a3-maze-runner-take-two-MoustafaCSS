@@ -3,9 +3,9 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class BFSSolverTest {
+class BFSTraversalTest {
 
-    private BFSSolver bfsSolver = new BFSSolver();
+    private BFSTraversal bfsSolver = new BFSTraversal();
 
     @Test
     void testSolveTinyMaze() {

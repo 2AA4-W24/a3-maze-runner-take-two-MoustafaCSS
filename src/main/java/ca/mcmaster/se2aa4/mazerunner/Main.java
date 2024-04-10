@@ -27,7 +27,7 @@ public class Main {
                     System.out.println("incorrect path");
                 }
             } else {
-                String method = cmd.getOptionValue("method", "righthand");
+                String method = cmd.getOptionValue("method", "BFS");
                 Path path = solveMaze(method, maze);
                 System.out.println(path.getFactorizedForm());
 
@@ -37,7 +37,7 @@ public class Main {
                     System.out.println("Time to load in the maze from the file: " + maze.getMazeLoadingTime() + " milliseconds" );
                     
                     MazeSolvingResults baselineResult = benchmarkMazeSolving(baseline, maze);
-                    MazeSolvingResults methodResult = benchmarkMazeSolving(method, maze); // Ensure method benchmarking happens here too
+                    MazeSolvingResults methodResult = benchmarkMazeSolving(method, maze); 
                 
                     System.out.println("Time to solve the maze using the " + method + " method: " + methodResult.getExecutionTime() + " ms");
                     System.out.println("Time to solve the maze using the " + baseline + " method: " + baselineResult.getExecutionTime() + " ms");
@@ -77,7 +77,7 @@ public class Main {
             }
             case "BFS" -> {
                 logger.debug("BFS algorithm chosen.");
-                solver = new GraphBasedSolver(new BFSSolver()); 
+                solver = new GraphBasedSolver(new BFSTraversal()); 
             }
             default -> {
                 throw new Exception("Maze solving method '" + method + "' not supported."); 

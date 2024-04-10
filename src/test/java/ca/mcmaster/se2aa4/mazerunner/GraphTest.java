@@ -23,7 +23,7 @@ class GraphTest {
         List<Node> neighbors = graph.getNeighbors(node);
 
         int expectedNeighborCount = 4;
-        assertEquals(expectedNeighborCount, neighbors.size(), "Node in the middle of the maze should have 4 neighbors.");
+        assertEquals(expectedNeighborCount, neighbors.size(), "A Node in the middle of the maze should have 4 neighbors.");
     }
 
     @Test
@@ -32,7 +32,7 @@ class GraphTest {
         Node wallNode = new Node(new Position(0, 0)); 
         List<Node> neighbors = graph.getNeighbors(wallNode);
 
-        assertTrue(neighbors.isEmpty(), "A wall node should have no neighbors.");
+        assertTrue(neighbors.isEmpty(), "A wall node should have 0 neighbors.");
     }
 
 }

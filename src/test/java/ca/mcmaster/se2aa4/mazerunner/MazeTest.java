@@ -31,6 +31,6 @@ class MazeTest {
     void testGetMazeLoadingTime() {
         String loadingTime = maze.getMazeLoadingTime();
         assertNotNull(loadingTime, "Loading time should not be null");
-        assertTrue(loadingTime.matches("\\d+\\.\\d{2}"), "Loading time should be formatted to two decimal places");
+        assertTrue(loadingTime.matches("\\d+\\.\\d{2}"), "Loading time should be two decimal places");
     }
 }

@@ -2,7 +2,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 public class MazeSolvingResults {
     private final Path path;
-    private final long executionTime; // Time in milliseconds
+    private final long executionTime; 
 
     public MazeSolvingResults(Path path, long executionTime) {
         this.path = path;
