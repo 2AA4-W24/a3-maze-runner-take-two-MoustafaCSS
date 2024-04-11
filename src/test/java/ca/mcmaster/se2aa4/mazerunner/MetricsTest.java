@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SpeedUpTest {
+class MetricsTest {
 
     @Test
     void calculateSpeedUpTest() {
@@ -17,7 +17,7 @@ class SpeedUpTest {
             methodPath.addStep('F'); 
         }
 
-        SpeedUp speedUpCalculator = new SpeedUp();
+        Metrics speedUpCalculator = new Metrics();
         String speedUpResult = speedUpCalculator.calculateSpeedUp(methodPath, baselinePath);
         assertEquals("2.00", speedUpResult, "speedup should be '2.00' for paths of length 10 and 5.");
     }

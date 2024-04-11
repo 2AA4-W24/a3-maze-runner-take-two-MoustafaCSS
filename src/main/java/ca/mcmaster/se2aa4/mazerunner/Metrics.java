@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-public class SpeedUp {
+public class Metrics {
 
     public String calculateSpeedUp(Path baselinePath, Path methodPath) {
         int baselineLength = baselinePath.getPathSize(baselinePath);

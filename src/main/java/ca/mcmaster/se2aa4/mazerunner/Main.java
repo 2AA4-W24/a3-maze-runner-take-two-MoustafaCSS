@@ -42,7 +42,7 @@ public class Main {
                     System.out.println("Time to solve the maze using the " + method + " method: " + methodResult.getExecutionTime() + " ms");
                     System.out.println("Time to solve the maze using the " + baseline + " method: " + baselineResult.getExecutionTime() + " ms");
                 
-                    SpeedUp speedUpCalculator = new SpeedUp();
+                    Metrics speedUpCalculator = new Metrics();
                     String speedUp = speedUpCalculator.calculateSpeedUp(methodResult.getPath(), baselineResult.getPath());
                     System.out.println("The " + method + " algorithm is " + speedUp + " times faster than " + baseline);
                 }
